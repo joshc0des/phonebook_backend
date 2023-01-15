@@ -46,6 +46,7 @@ app.get('/api/persons/:id', (request, response) => {
   const person = persons.find(person => person.id === id)
   
   if (person) {
+    console.log(`Showing person of id: ${id}`)
     response.json(person)
   } else {
     response.status(404).end()
@@ -55,12 +56,11 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
+  console.log(`Deleting person of id: ${id}`)
   response.status(204).end()
-  console.log(`Showing person id: ${id}`)
 })
 
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-
