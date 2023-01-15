@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json());
 
 let persons = [
   { 
@@ -25,11 +26,13 @@ let persons = [
 ]
 
 
-app.get('/', (request, response) => {
+
+app.get('/', (request, response) => {  // home page
   response.send('<h1>Hello World!</h1>')
 })
 
-app.get('/info', (request, response) => {
+
+app.get('/info', (request, response) => {  // get persons count at current time
   let htmlInfo = `
     Phonebook has info for ${persons.length} people <br />
     ${new Date()}
@@ -37,11 +40,13 @@ app.get('/info', (request, response) => {
   response.send(htmlInfo)
 })
 
-app.get('/api/persons', (request, response) => {
+
+app.get('/api/persons', (request, response) => {  // get all persons
   response.json(persons)
 })
 
-app.get('/api/persons/:id', (request, response) => {
+
+app.get('/api/persons/:id', (request, response) => {  // get person
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   
@@ -53,12 +58,26 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+
+app.post('/api/persons', (request, response) => {  // add person
+  const person = request.body
+
+  person['id'] = Math.floor(Math.random() * 100)
+  
+  response.json(person)
+
+  persons = persons.concat(person)
+  response.status(204).end()
+})
+
+
+app.delete('/api/persons/:id', (request, response) => {  // delete person
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
   console.log(`Deleting person of id: ${id}`)
   response.status(204).end()
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
