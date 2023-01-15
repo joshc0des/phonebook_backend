@@ -24,8 +24,17 @@ let persons = [
   }
 ]
 
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
+})
+
+app.get('/info', (request, response) => {
+  let htmlInfo = `
+    Phonebook has info for ${persons.length} people <br />
+    ${new Date()}
+`
+  response.send(htmlInfo)
 })
 
 app.get('/api/persons', (request, response) => {
@@ -46,7 +55,6 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
-
   response.status(204).end()
 })
 
@@ -54,3 +62,4 @@ const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
