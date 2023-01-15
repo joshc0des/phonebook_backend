@@ -26,6 +26,21 @@ let persons = [
 ]
 
 
+const isDup = (new_p) => {
+  let dup = false
+  persons.forEach(existing_p => {
+    if (existing_p.name == new_p.name) {
+      dup = true
+    }
+  })
+  
+  if (dup) {
+    return true
+  } else {
+    return false
+  }
+}
+
 
 app.get('/', (request, response) => {  // home page
   response.send('<h1>Hello World!</h1>')
@@ -59,15 +74,25 @@ app.get('/api/persons/:id', (request, response) => {  // get person
 })
 
 
+
 app.post('/api/persons', (request, response) => {  // add person
   const person = request.body
 
   person['id'] = Math.floor(Math.random() * 100)
-  
-  response.json(person)
 
-  persons = persons.concat(person)
-  response.status(204).end()
+  if (!person.name) {
+    response.json({ error: 'missing name' })
+    response.status(404).end()
+  } else if (!person.number) {
+    response.json({ error: 'missing number' })
+    response.status(404).end()
+  } else if (isDup(person)) {
+    response.json({ error: 'name already exists' })
+    response.status(404).end()
+  } else {
+    response.json(person)
+    persons = persons.concat(person)
+  }
 })
 
 
