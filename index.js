@@ -1,8 +1,15 @@
 const express = require('express')
 const morgan = require('morgan')
+morgan.token('post-data', function showData (req, res) {
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body)
+  }
+})
 const app = express()
 app.use(express.json());
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+app.use(morgan(
+  ':method :url :status :res[content-length] - :response-time ms :post-data'
+  ))
 
 
 let persons = [
@@ -78,19 +85,20 @@ app.get('/api/persons/:id', (request, response) => {  // get person
 
 
 app.post('/api/persons', (request, response) => {  // add person
-  const person = request.body
+  const body = request.body
 
-  person['id'] = Math.floor(Math.random() * 100)
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: Math.floor(Math.random() * 10000)
+  }
 
   if (!person.name) {
-    response.json({ error: 'missing name' })
-    response.status(404).end()
+    return response.status(400).json({ error: 'missing name'});
   } else if (!person.number) {
-    response.json({ error: 'missing number' })
-    response.status(404).end()
+    return response.status(400).json({ error: 'missing number'});
   } else if (isDup(person)) {
-    response.json({ error: 'name already exists' })
-    response.status(404).end()
+    return response.status(400).json({ error: 'name already exists'});
   } else {
     response.json(person)
     persons = persons.concat(person)
