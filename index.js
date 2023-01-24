@@ -1,4 +1,6 @@
+require('dotenv').config()
 const express = require('express')
+const Note = require('./models/name')
 const cors = require('cors')
 // const morgan = require('morgan')
 // morgan.token('post-data', function showData (req, res) {
