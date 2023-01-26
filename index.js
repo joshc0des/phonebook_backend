@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-const Note = require('./models/name')
+const Name = require('./models/name')
 const cors = require('cors')
 // const morgan = require('morgan')
 // morgan.token('post-data', function showData (req, res) {
@@ -72,8 +72,10 @@ app.get('/info', (request, response) => {  // get persons count at current time
 })
 
 
-app.get('/api/persons', (request, response) => {  // get all persons
-  response.json(persons)
+app.get('/api/names', (request, response) => {  // get all persons
+  Name.find({}).then(names => {
+    response.json(names)
+  })
 })
 
 
