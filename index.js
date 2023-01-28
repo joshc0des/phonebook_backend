@@ -22,22 +22,6 @@ app.use(cors())
 // ]
 
 
-const isDup = (new_p) => {
-  let dup = false
-  persons.forEach(existing_p => {
-    if (existing_p.name == new_p.name) {
-      dup = true
-    }
-  })
-  
-  if (dup) {
-    return true
-  } else {
-    return false
-  }
-}
-
-
 app.get('/', (request, response) => {  // home page
   response.send('<h1>Hello World!</h1>')
 })
@@ -59,7 +43,7 @@ app.get('/api/persons', (request, response) => {  // get all persons
 })
 
 
-app.get('/api/persons/:id', (request, response) => {  // get person
+app.get('/api/persons/:id', (request, response, next) => {  // get person
   Name.findById(request.params.id)
     .then(name => {
       if (name) {
@@ -68,11 +52,20 @@ app.get('/api/persons/:id', (request, response) => {  // get person
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      response.status(500).end()
-    })
+    .catch(error => next(error))
 })
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 
 app.post('/api/persons', (request, response) => {  // add person
