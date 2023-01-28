@@ -19,26 +19,6 @@ app.use(cors())
 
 // removed in 3.13
 // let persons = [
-//   { 
-//     name: "Arto Hellas", 
-//     number: "040-123456",
-//     id: 1
-//   },
-//   { 
-//     name: "Ada Lovelace", 
-//     number: "39-44-5323523",
-//     id: 2
-//   },
-//   { 
-//     name: "Dan Abramov", 
-//     number: "12-43-234345",
-//     id: 3
-//   },
-//   {
-//     name: "Mary Poppendieck",
-//     number: "39-23-6423122",
-//     id: 4
-//   }
 // ]
 
 
@@ -72,7 +52,7 @@ app.get('/info', (request, response) => {  // get persons count at current time
 })
 
 
-app.get('/api/names', (request, response) => {  // get all persons
+app.get('/api/persons', (request, response) => {  // get all persons
   Name.find({}).then(names => {
     response.json(names)
   })
@@ -95,22 +75,18 @@ app.get('/api/persons/:id', (request, response) => {  // get person
 app.post('/api/persons', (request, response) => {  // add person
   const body = request.body
 
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: Math.floor(Math.random() * 10000)
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  if (!person.name) {
-    return response.status(400).json({ error: 'missing name'});
-  } else if (!person.number) {
-    return response.status(400).json({ error: 'missing number'});
-  } else if (isDup(person)) {
-    return response.status(400).json({ error: 'name already exists'});
-  } else {
-    response.json(person)
-    persons = persons.concat(person)
-  }
+  const name = new Name({
+    name: body.name,
+    number: body.number
+  })
+
+  name.save().then(savedName => {
+    response.json(savedName)
+  })
 })
 
 
