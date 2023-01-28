@@ -91,10 +91,11 @@ app.post('/api/persons', (request, response) => {  // add person
 
 
 app.delete('/api/persons/:id', (request, response) => {  // delete person
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-  console.log(`Deleting person of id: ${id}`)
-  response.status(204).end()
+  Name.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 
