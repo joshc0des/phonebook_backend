@@ -60,15 +60,18 @@ app.get('/api/persons', (request, response) => {  // get all persons
 
 
 app.get('/api/persons/:id', (request, response) => {  // get person
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id)
-  
-  if (person) {
-    console.log(`Showing person of id: ${id}`)
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  Name.findById(request.params.id)
+    .then(name => {
+      if (name) {
+        response.json(name)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(500).end()
+    })
 })
 
 
