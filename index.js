@@ -27,12 +27,16 @@ app.get('/', (request, response) => {  // home page
 })
 
 
+
 app.get('/info', (request, response) => {  // get persons count at current time
-  let htmlInfo = `
-    Phonebook has info for ${persons.length} people <br />
+  Name.countDocuments({}).then((count) => {
+    let htmlInfo = `
+    Phonebook has info for ${count} people <br />
     ${new Date()}
-`
+  `
+
   response.send(htmlInfo)
+  })
 })
 
 
