@@ -2,30 +2,15 @@ require('dotenv').config()
 const express = require('express')
 const Name = require('./models/name')
 const cors = require('cors')
-// const morgan = require('morgan')
-// morgan.token('post-data', function showData (req, res) {
-//   if (req.method === 'POST') {
-//     return JSON.stringify(req.body)
-//   }
-// })
 const app = express()
 app.use(express.static('build'))
 app.use(express.json());
 app.use(cors())
-// app.use(morgan(
-//   ':method :url :status :res[content-length] - :response-time ms :post-data'
-//   ))
-
-
-// removed in 3.13
-// let persons = [
-// ]
 
 
 app.get('/', (request, response) => {  // home page
   response.send('<h1>Hello World!</h1>')
 })
-
 
 
 app.get('/info', (request, response) => {  // get persons count at current time
