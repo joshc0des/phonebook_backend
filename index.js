@@ -27,6 +27,9 @@ app.get('/info', (request, response) => {  // get persons count at current time
 
 app.get('/api/persons', (request, response) => {  // get all persons
   Name.find({}).then(names => {
+    Name.countDocuments({}).then((count) => {
+      console.log(`There are ${count} people in the phonebook database.`)
+    })
     response.json(names)
   })
 })
@@ -36,6 +39,7 @@ app.get('/api/persons/:id', (request, response, next) => {  // get person
   Name.findById(request.params.id)
     .then(name => {
       if (name) {
+        console.log(`Showing the user "${name.name}" from the phonebook database.`)
         response.json(name)
       } else {
         response.status(404).end()
